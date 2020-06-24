@@ -3,9 +3,10 @@ package main
 import (
 	"time"
 
-	"github.com/go-redis/redis/v8"
+	"github.com/go-redis/redis/v7"
+
 	"github.com/xiaoenai/glog"
-	"github.com/xiaoenai/goredis"
+	"github.com/xiaoenai/goredis/v2"
 )
 
 func main() {
@@ -20,7 +21,7 @@ func main() {
 
 	m := goredis.NewModule("test")
 
-	s, err := glog.Errorf(m.Key("a_key"), "a_value", time.Second).Result()
+	s, err := c.Set(m.Key("a_key"), "a_value", time.Second).Result()
 	if err != nil {
 		glog.Errorf("c.Set().Result() error:", err)
 	}
@@ -39,6 +40,7 @@ func main() {
 	}
 	glog.Infof("[after 2s] c.Get().Result() is null ?: %v", err == redis.Nil)
 
+	key := "goredis"
 	if err := c.Watch(func(tx *redis.Tx) error {
 		n, err := tx.Get(key).Int64()
 		if err != nil && err == redis.Nil {
@@ -54,13 +56,13 @@ func main() {
 		time.Sleep(time.Duration(5) * time.Second)
 		// 在redis客户端修改值，下面语句报错
 
-		_, err = tx.TxPipelined(ctx, func(pipe redis.Pipeliner) error {
+		_, err = tx.TxPipelined(func(pipe redis.Pipeliner) error {
 			// pipe handles the error case
-			pipe.Set(ctx, key, n, 0)
+			pipe.Set(key, n, 0)
 			return nil
 		})
 		return err
-	}, "goredis"); err != nil {
+	}, key); err != nil {
 		glog.Errorf("err4-> %v", err)
 	}
 }
