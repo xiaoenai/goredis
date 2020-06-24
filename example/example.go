@@ -42,16 +42,16 @@ func main() {
 	if err := c.Watch(func(tx *redis.Tx) error {
 		n, err := tx.Get(key).Int64()
 		if err != nil && err == redis.Nil {
-			glog.Errorf("err1-> %v",err)
+			glog.Errorf("err1-> %v", err)
 			return err
-		}else if err != nil && err != redis.Nil{
-			glog.Errorf("err2-> %v",err)
+		} else if err != nil && err != redis.Nil {
+			glog.Errorf("err2-> %v", err)
 			return err
 		}
-		glog.Infof("n-> %d",n)
+		glog.Infof("n-> %d", n)
 
 		glog.Infof("Start sleep.")
-		time.Sleep(time.Duration(5)*time.Second)
+		time.Sleep(time.Duration(5) * time.Second)
 		// 在redis客户端修改值，下面语句报错
 
 		_, err = tx.TxPipelined(ctx, func(pipe redis.Pipeliner) error {
@@ -60,7 +60,7 @@ func main() {
 			return nil
 		})
 		return err
-	}, "goredis");err != nil{
-		glog.Errorf("err4-> %v",err)
+	}, "goredis"); err != nil {
+		glog.Errorf("err4-> %v", err)
 	}
 }
