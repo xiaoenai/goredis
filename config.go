@@ -2,9 +2,7 @@ package goredis
 
 import (
 	"fmt"
-	"time"
 
-	"github.com/go-redis/redis/v8"
 	"github.com/henrylee2cn/cfgo"
 )
 
