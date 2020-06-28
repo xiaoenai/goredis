@@ -54,11 +54,11 @@ func main() {
 
 		glog.Infof("Start sleep.")
 		time.Sleep(time.Duration(5) * time.Second)
-		// 在redis客户端修改值，下面语句报错
+		// 在redis客户端修改值，下面语句报错 redis: transaction failed
 
 		_, err = tx.TxPipelined(func(pipe redis.Pipeliner) error {
 			// pipe handles the error case
-			pipe.Set(key, n, 0)
+			pipe.DecrBy(key, 2)
 			return nil
 		})
 		return err
