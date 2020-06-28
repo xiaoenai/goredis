@@ -16,6 +16,8 @@ type (
 	Cmdable interface {
 		redis.Cmdable
 		Subscribe(channels ...string) *redis.PubSub
+		// tx watch
+		Watch(fn func(*redis.Tx) error, keys ...string) error
 	}
 	// Alias
 	PubSub             = redis.PubSub
